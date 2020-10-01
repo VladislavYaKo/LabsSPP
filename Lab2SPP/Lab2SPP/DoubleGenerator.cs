@@ -5,7 +5,7 @@ namespace Lab2SPP
 {
     public class DoubleGenerator : Generator
     {
-        public override object Generate(Type reqType)
+        public override object Generate()
         {
             return rnd.NextDouble();
         }

@@ -5,7 +5,7 @@ namespace Lab2SPP
 {
     public class ByteGenerator : Generator
     {
-        public override object Generate(Type reqType)
+        public override object Generate()
         {
             return (byte)rnd.Next(byte.MinValue, byte.MaxValue+1);
         }

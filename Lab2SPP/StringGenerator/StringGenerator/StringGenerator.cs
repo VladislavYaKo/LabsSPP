@@ -1,7 +1,11 @@
-﻿using GeneratorLibrary;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using GeneratorLibrary;
 
-namespace Lab2SPP
+namespace StringGenerator
 {
     public class StringGenerator : Generator
     {

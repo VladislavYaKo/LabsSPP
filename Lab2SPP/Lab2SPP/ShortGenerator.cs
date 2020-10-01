@@ -5,7 +5,7 @@ namespace Lab2SPP
 {
     public class ShortGenerator : Generator
     {
-        public override object Generate(Type reqType)
+        public override object Generate()
         {
             return (short)rnd.Next(short.MinValue, short.MaxValue+1);
         }

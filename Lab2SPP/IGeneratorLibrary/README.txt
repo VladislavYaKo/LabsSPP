@@ -1,0 +1,1 @@
+Название папки неверное. Нужно GeneratorLibrary вместо IGeneratorLibrary.
