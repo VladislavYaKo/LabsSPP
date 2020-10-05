@@ -1,6 +1,7 @@
 ﻿using GeneratorLibrary;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Lab2SPP
@@ -46,17 +47,95 @@ namespace Lab2SPP
             
             if (!type.IsPrimitive)
             {
-                //TODO
+                _generationStack.Push(type);
+                ConstructorInfo ConstructorWithMaxArgs = GetConstructorWithMaxParams(type);
+                if (ConstructorWithMaxArgs != null)
+                {
+                    var instance = GenerateObjectFromConstructor(ConstructorWithMaxArgs);
+                    instance = GenerateFieldsAndProperties(type, instance);
+                    _generationStack.Pop();
+                    return instance;
+                }
+                else
+                {
+                    if (type.GetConstructors().Count() != 0 || type.IsValueType)
+                    {
+                        var instance = Activator.CreateInstance(type);
+                        instance = GenerateFieldsAndProperties(type, instance);
+                        _generationStack.Pop();
+                        return instance;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
             }
             return null;
         }
 
         public T Create<T>()
         {
-            if (Create(typeof(T)) == null)
+            object value = Create(typeof(T));
+            if (value == null)
                 return default(T);
 
-            return (T)Create(typeof(T));
+            return (T)value;
+        }
+
+        private ConstructorInfo GetConstructorWithMaxParams(Type type)
+        {
+            ConstructorInfo constructorwithmaxparams = null;
+            int count = 0;
+            foreach (ConstructorInfo constructor in type.GetConstructors())
+            {
+                if (count < constructor.GetParameters().Count())
+                {
+                    constructorwithmaxparams = constructor;
+                    count = constructor.GetParameters().Count();
+                }
+            }
+            return constructorwithmaxparams;
+        }
+
+        private object GenerateObjectFromConstructor(ConstructorInfo constructor)
+        {
+            ParameterInfo[] parameters = constructor.GetParameters();
+            object[] parametersValues = new object[parameters.Length];
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                if (parameters[i].ParameterType.IsGenericType)
+                {
+                    parametersValues[i] = _listGenerator.Generate((Type)parameters[i].ParameterType.GenericTypeArguments.GetValue(0));
+                }
+                else
+                {
+                    Generator valueGenerator;
+                    _generators.TryGetValue(parameters[i].ParameterType, out valueGenerator);
+                    parametersValues[i] = valueGenerator.Generate();
+                }
+            }
+            return constructor.Invoke(parametersValues);
+        }
+
+        private object GenerateFieldsAndProperties(Type type, object instance)
+        {
+            FieldInfo[] fields = type.GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                object value = Create(field.FieldType);
+                field.SetValue(instance, value);
+            }
+            PropertyInfo[] properties = type.GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.CanWrite)
+                {
+                    object value = Create(property.PropertyType);
+                    property.SetValue(instance, value);
+                }
+            }
+            return instance;
         }
     }
 }
