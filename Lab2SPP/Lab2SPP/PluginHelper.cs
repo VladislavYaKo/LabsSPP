@@ -1,5 +1,4 @@
-﻿using GeneratorLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -21,26 +20,34 @@ namespace Lab2SPP
             return asmsList;
         }
 
-        public static Dictionary<Type, Generator> GetGenerators(List<Assembly> Assemblies)
+        public static Dictionary<string, Generator> GetGenerators(List<Assembly> Assemblies)
         {
-            Dictionary<Type, Generator> Generators = new Dictionary<Type, Generator>();
-            foreach (Assembly Assembly in Assemblies)
+            Dictionary<string, Generator> Generators = new Dictionary<string, Generator>();
+            foreach (Assembly assembly in Assemblies)
             {
-                Type[] Types = Assembly.GetTypes();
-                PluginHelper.LoadGenerators(Generators, Types);
+                try
+                {
+                    Type[] Types = assembly.GetTypes();
+                    PluginHelper.LoadGenerators(Generators, Types);
+                }catch(ReflectionTypeLoadException ex)
+                {
+                    Exception[] exsInfo = ex.LoaderExceptions;
+                    foreach (Exception exInfo in exsInfo)
+                        Console.WriteLine(exInfo.Message);
+                }
                 
             }
             return Generators;
         }
 
-        private static void LoadGenerators(Dictionary<Type, Generator> Generators, Type[] Types)
+        private static void LoadGenerators(Dictionary<string, Generator> Generators, Type[] Types)
         {
             foreach (Type type in Types)
             {
                 if (!type.IsInterface && !type.IsAbstract && typeof(Generator).IsAssignableFrom(type))
                 {
                     Generator generator = Activator.CreateInstance(type) as Generator;
-                    Generators.Add(generator.GeneratorType(), generator);                    
+                    Generators.Add(generator.GeneratorType().Name, generator);                    
                 }
             }
         }

@@ -50,6 +50,7 @@
     <Compile Include="DoubleGenerator.cs" />
     <Compile Include="Faker.cs" />
     <Compile Include="FloatGenerator.cs" />
+    <Compile Include="Generator.cs" />
     <Compile Include="IntGenerator.cs" />
     <Compile Include="ListGenerator.cs" />
     <Compile Include="PluginHelper.cs" />
@@ -59,12 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IGeneratorLibrary\GeneratorLibrary.csproj">
-      <Project>{784e5ec8-9e3e-4c1e-aea7-7bc8d9d8eaa8}</Project>
-      <Name>GeneratorLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

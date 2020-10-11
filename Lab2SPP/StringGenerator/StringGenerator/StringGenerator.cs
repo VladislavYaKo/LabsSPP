@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GeneratorLibrary;
+using Lab2SPP;
 
 namespace StringGenerator
 {
@@ -18,6 +18,10 @@ namespace StringGenerator
                 res += (char)rnd.Next(char.MinValue, char.MaxValue + 1);
             }
             return res;
+        }
+        public override object Generate(Type reqType)
+        {
+            return Generate();
         }
         public override Type GeneratorType()
         {

@@ -31,9 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IGeneratorLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\IGeneratorLibrary\bin\Debug\IGeneratorLibrary.dll</HintPath>
+    <Reference Include="Lab2SPP">
+      <HintPath>..\..\Lab2SPP\bin\Debug\Lab2SPP.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

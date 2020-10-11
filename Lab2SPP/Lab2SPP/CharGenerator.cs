@@ -1,5 +1,4 @@
-﻿using GeneratorLibrary;
-using System;
+﻿using System;
 
 namespace Lab2SPP
 {
@@ -8,6 +7,10 @@ namespace Lab2SPP
         public override object Generate()
         {
             return (char)rnd.Next(char.MinValue, char.MaxValue+1);
+        }
+        public override object Generate(Type reqType)
+        {
+            return Generate();
         }
         public override Type GeneratorType()
         {

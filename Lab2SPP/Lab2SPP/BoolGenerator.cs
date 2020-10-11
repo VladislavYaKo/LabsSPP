@@ -1,5 +1,4 @@
-﻿using GeneratorLibrary;
-using System;
+﻿using System;
 
 namespace Lab2SPP
 {
@@ -9,6 +8,10 @@ namespace Lab2SPP
         {
             byte curBool =  (byte)rnd.Next(0,2);
             return curBool == 0 ? false : true;
+        }
+        public override object Generate(Type reqType)
+        {
+            return Generate();
         }
         public override Type GeneratorType()
         {

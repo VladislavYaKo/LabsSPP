@@ -14,13 +14,7 @@ namespace Lab2SPP.Tests
         {
             Foo foo = _faker.Create<Foo>();
             Assert.AreNotEqual(foo, default(Foo));
-        }
-
-        [TestMethod]
-        public void TestD()
-        {
-            D d = _faker.Create<D>();
-            Assert.AreNotEqual(d, default(D));
+            Assert.AreNotEqual(foo.inside, default(InsideTheFoo));            
         }
         [TestMethod]
         public void TestEnum()
@@ -47,6 +41,15 @@ namespace Lab2SPP.Tests
             Assert.AreNotEqual(c, default(C));
         }
         [TestMethod]
+        public void TestD()
+        {
+            D d = _faker.Create<D>();
+            Assert.AreNotEqual(d, default(D));
+            Assert.AreNotEqual(d.a, default(int));
+            Assert.AreNotEqual(d.b, default(int));
+            Assert.AreNotEqual(d.k, default(char));
+        }
+        [TestMethod]
         public void TestPrivateConstructor()
         {
             PrivateConstructor pc = _faker.Create<PrivateConstructor>();
@@ -69,12 +72,51 @@ namespace Lab2SPP.Tests
         {
             TestStruct ts = _faker.Create<TestStruct>();
             Assert.AreNotEqual(ts, default(TestStruct));
+            Assert.AreNotEqual(ts.a, default(int));
+            Assert.AreNotEqual(ts.str, default(string));
         }
         [TestMethod]
         public void TestStructConstructor()
         {
             TestStructConstructor tsc = _faker.Create<TestStructConstructor>();
             Assert.AreNotEqual(tsc, default(TestStructConstructor));
+        }
+        [TestMethod]
+        public void TestListOfList()
+        {
+            List<List<int>> listOfList = _faker.Create<List<List<int>>>();
+            bool isWorking = true;
+            int defInts = 0;
+            foreach (List<int> listElem in listOfList)
+            {
+                if (listElem == null)
+                {
+                    isWorking = false;
+                    break;
+                }
+                else
+                {
+                    foreach (int intElem in listElem)
+                    {
+                        if (intElem == default(int))
+                            defInts++;
+                    }
+                    if (defInts == listElem.Count)
+                    {
+                        isWorking = false;
+                        break;
+                    }
+                }
+            }
+
+            Assert.AreEqual(isWorking, true);
+        }
+        [TestMethod]
+        public void TestExceptionConstruct()
+        {
+            TestExceptionConstruct tex = _faker.Create<TestExceptionConstruct>();
+            Assert.AreEqual(tex.b, 'f');
+            Assert.AreEqual(tex.str, "Hello");
         }
     }
 }

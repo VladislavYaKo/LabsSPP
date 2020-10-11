@@ -1,31 +1,30 @@
-﻿using GeneratorLibrary;
-using System;
+﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Permissions;
 
 namespace Lab2SPP
 {
     public class Faker
     {
-        private Dictionary<Type, Generator> _generators = new Dictionary<Type, Generator>();
+        private Dictionary<string, Generator> _generators = new Dictionary<string, Generator>();
         private Stack<Type> _generationStack = new Stack<Type>();
-        private ListGenerator _listGenerator;
 
         public Faker()
         {
             List<Assembly> asms = PluginHelper.LoadPlugins("..\\..\\..\\Plugins\\StringGenerator.dll", "..\\..\\..\\Plugins\\LongGenerator.dll");
             _generators = PluginHelper.GetGenerators(asms);
-            _generators.Add(typeof(bool), new BoolGenerator());
-            _generators.Add(typeof(byte), new ByteGenerator());
-            _generators.Add(typeof(char), new CharGenerator());
-            _generators.Add(typeof(DateTime), new DateTimeGenerator());
-            _generators.Add(typeof(double), new DoubleGenerator());
-            _generators.Add(typeof(float), new FloatGenerator());
-            _generators.Add(typeof(int), new IntGenerator());
-            _generators.Add(typeof(short), new ShortGenerator());
-
-            _listGenerator = new ListGenerator(_generators, this);
+            _generators.Add(typeof(bool).Name, new BoolGenerator());
+            _generators.Add(typeof(byte).Name, new ByteGenerator());
+            _generators.Add(typeof(char).Name, new CharGenerator());
+            _generators.Add(typeof(DateTime).Name, new DateTimeGenerator());
+            _generators.Add(typeof(double).Name, new DoubleGenerator());
+            _generators.Add(typeof(float).Name, new FloatGenerator());
+            _generators.Add(typeof(int).Name, new IntGenerator());
+            _generators.Add(typeof(short).Name, new ShortGenerator());
+            _generators.Add(typeof(List<>).Name, new ListGenerator(this));
         }
 
         public object Create(Type type)
@@ -37,24 +36,27 @@ namespace Lab2SPP
                 return null;
 
             Generator curGenerator;
-            _generators.TryGetValue(type, out curGenerator);
+            _generators.TryGetValue(type.Name, out curGenerator);
             if (curGenerator != null)
-                return curGenerator.Generate();
-            if (type.IsGenericType)
-            {
-                return _listGenerator.Generate((Type)type.GetGenericArguments().GetValue(0));
-            }
+                return curGenerator.Generate(type);
+
             
             if (!type.IsPrimitive)
             {
                 _generationStack.Push(type);
-                ConstructorInfo ConstructorWithMaxArgs = GetConstructorWithMaxParams(type);
-                if (ConstructorWithMaxArgs != null)
+                ConstructorInfo[] sortedConstructors = GetSortedConstructors(type);
+                if (sortedConstructors.Length != 0)
                 {
-                    var instance = GenerateObjectFromConstructor(ConstructorWithMaxArgs);
-                    instance = GenerateFieldsAndProperties(type, instance);
-                    _generationStack.Pop();
-                    return instance;
+                    foreach (ConstructorInfo ci in sortedConstructors)
+                    {
+                        var instance  = GenerateObjectFromConstructor(ci);
+                        if (instance != null)
+                        {
+                            instance = GenerateFieldsAndProperties(type, instance);
+                            _generationStack.Pop();
+                            return instance;
+                        }
+                    }   
                 }
                 else
                 {
@@ -83,19 +85,11 @@ namespace Lab2SPP
             return (T)value;
         }
 
-        private ConstructorInfo GetConstructorWithMaxParams(Type type)
+        private ConstructorInfo[] GetSortedConstructors(Type type)
         {
-            ConstructorInfo constructorwithmaxparams = null;
-            int count = 0;
-            foreach (ConstructorInfo constructor in type.GetConstructors())
-            {
-                if (count < constructor.GetParameters().Count())
-                {
-                    constructorwithmaxparams = constructor;
-                    count = constructor.GetParameters().Count();
-                }
-            }
-            return constructorwithmaxparams;
+            ConstructorInfo[] sortedConstructors;
+            sortedConstructors = type.GetConstructors();
+            return sortedConstructors.OrderByDescending(c => c.GetParameters().Length).ToArray();           
         }
 
         private object GenerateObjectFromConstructor(ConstructorInfo constructor)
@@ -104,18 +98,30 @@ namespace Lab2SPP
             object[] parametersValues = new object[parameters.Length];
             for (int i = 0; i < parameters.Length; i++)
             {
-                if (parameters[i].ParameterType.IsGenericType)
-                {
-                    parametersValues[i] = _listGenerator.Generate((Type)parameters[i].ParameterType.GenericTypeArguments.GetValue(0));
-                }
-                else
-                {
-                    Generator valueGenerator;
-                    _generators.TryGetValue(parameters[i].ParameterType, out valueGenerator);
-                    parametersValues[i] = valueGenerator.Generate();
-                }
+                Generator valueGenerator;
+                _generators.TryGetValue(parameters[i].ParameterType.Name, out valueGenerator);
+                parametersValues[i] = valueGenerator.Generate(parameters[i].ParameterType);
+
             }
-            return constructor.Invoke(parametersValues);
+
+            object constructerObj;
+            try
+            {
+                constructerObj = constructor.Invoke(parametersValues);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+            return constructerObj;            
+        }
+
+        private object GetDefaultValue(Type type)
+        {
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
+            else
+                return null;
         }
 
         private object GenerateFieldsAndProperties(Type type, object instance)
@@ -123,8 +129,19 @@ namespace Lab2SPP
             FieldInfo[] fields = type.GetFields();
             foreach (FieldInfo field in fields)
             {
-                object value = Create(field.FieldType);
-                field.SetValue(instance, value);
+                object defVal = GetDefaultValue(field.FieldType);
+
+                bool shouldCreate;
+                if (defVal != null)
+                    shouldCreate = defVal.Equals(field.GetValue(instance));
+                else
+                    shouldCreate = (defVal == field.GetValue(instance));
+
+                if (shouldCreate)
+                {
+                    object value = Create(field.FieldType);
+                    field.SetValue(instance, value);
+                }
             }
             PropertyInfo[] properties = type.GetProperties();
             foreach (PropertyInfo property in properties)

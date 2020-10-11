@@ -79,6 +79,26 @@ namespace Lab2SPP
             e = b;
         }
     }
+    public class TestExceptionConstruct
+    {
+        public int a;
+        public char b;
+        public string str;
+
+        public TestExceptionConstruct()
+        {
+            b = 'f';
+            str = "Hello";
+        }
+
+        public TestExceptionConstruct(int aa, char bb)
+        {
+            throw new NotImplementedException();
+            a = aa;
+            b = bb;            
+        }
+    }
+    
 
     public class PrivateProperty
     {
@@ -127,6 +147,17 @@ namespace Lab2SPP
             TestStruct ts = faker.Create<TestStruct>();
             TestStructConstructor tsc = faker.Create<TestStructConstructor>();
             Console.WriteLine("{0}, {1}\n{2}, {3}", ts.a, ts.str, tsc.a, tsc.str);
+
+            Console.WriteLine();
+            List<List<int>> listOfList = faker.Create<List<List<int>>>();
+            foreach(List<int> listElem in listOfList)
+            {
+                foreach (int intElem in listElem)
+                    Console.Write(intElem + " ");
+                Console.WriteLine();
+            }
+
+            List<TestClass> l = faker.Create<List<TestClass>>();
 
             Console.ReadKey();
         }

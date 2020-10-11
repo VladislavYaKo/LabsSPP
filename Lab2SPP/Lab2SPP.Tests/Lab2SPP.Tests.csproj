@@ -56,10 +56,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IGeneratorLibrary\GeneratorLibrary.csproj">
-      <Project>{784e5ec8-9e3e-4c1e-aea7-7bc8d9d8eaa8}</Project>
-      <Name>GeneratorLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lab2SPP\Lab2SPP.csproj">
       <Project>{f049f09c-d36b-4495-8028-41aaf6be8ffd}</Project>
       <Name>Lab2SPP</Name>
