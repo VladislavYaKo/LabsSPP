@@ -11,9 +11,9 @@
     </Window.DataContext>
     <Grid>
         <Button x:Name="btnBrowse" Height="32" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="680,10,00,0" Content="Browse" Command="{Binding Path=OpenCommand}"/>
-        <TextBox x:Name="tbPath" Height="32" Width="600" BorderThickness="4"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0"/>
+        <TextBox x:Name="tbPath" Height="32" Width="600" BorderThickness="4"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" Text="{Binding Path=FilePath}"/>
         <Label x:Name="lbPath" Height="32" Width="70" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" FontSize="18" Content="Path:"/>
-        <TreeView x:Name="trvAssemblyTree" HorizontalAlignment="Left" VerticalAlignment="Top" Height="350" Width="770" Margin="10, 60, 0, 0">
+        <TreeView x:Name="trvAssemblyTree" HorizontalAlignment="Left" VerticalAlignment="Top" Height="350" Width="770" Margin="10, 60, 0, 0" ItemsSource="{Binding Path=Namespaces}">
             
         </TreeView>
     </Grid>

@@ -1,10 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Input;
+using AssemblyBrowserLibrary;
 
 namespace Lab3SPP
 {
@@ -43,7 +45,24 @@ namespace Lab3SPP
                         {
                             FilePath = openFileDialog.FileName;
                         }
+                        if (FilePath != null)
+                        {
+                            Model model = new Model();
+                            Namespaces = new ObservableCollection<Namespace>(model.LoadAssembly(FilePath));
+                        }
                     }));
+            }
+        }
+
+        private ObservableCollection<Namespace> _namespaces;
+
+        public ObservableCollection<Namespace> Namespaces
+        {
+            get { return _namespaces; }
+            set
+            {
+                _namespaces = value;
+                OnPropertyChanged("Namespaces");
             }
         }
     }
