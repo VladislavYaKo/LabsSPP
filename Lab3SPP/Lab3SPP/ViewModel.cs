@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Lab3SPP
 {
-    public class ViewModel
+    public class ViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string prop = "")
