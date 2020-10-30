@@ -1,16 +1,13 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
+﻿using AssemblyBrowserLibrary;
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows.Input;
-using AssemblyBrowserLibrary;
 
 namespace Lab3SPP
 {
-    public class ViewModel : INotifyPropertyChanged
+    public class ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string prop = "")

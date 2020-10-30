@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace AssemblyBrowserLibrary
 {
@@ -12,6 +17,20 @@ namespace AssemblyBrowserLibrary
         public List<Field> Fields { get; set; }
         public List<Property> Properties { get; set; }
         public List<Constructor> Constructors { get; set; }
+
+        public ICollection Collections
+        {
+            get
+            {
+                return new CompositeCollection()
+                {
+                    new CollectionContainer(){ Collection = Methods },
+                    new CollectionContainer(){ Collection = Fields },
+                    new CollectionContainer(){ Collection = Properties },
+                    new CollectionContainer(){ Collection = Constructors }
+                };
+            }
+        }
 
         public Class(Type type)
         {
@@ -74,10 +93,11 @@ namespace AssemblyBrowserLibrary
             List<Field> tmp = new List<Field>();
             foreach (FieldInfo fieldInfo in fields)
             {
-               
-                Field field = new Field(fieldInfo);
-                tmp.Add(field);
-                
+                if (fieldInfo.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+                {
+                    Field field = new Field(fieldInfo);
+                    tmp.Add(field);
+                }
             }
             return tmp;
         }

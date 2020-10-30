@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 
 namespace Lab3SPP
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         public Action<object> action;
         public Func<object, bool> _canExecute;
