@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab3SPP", "Lab3SPP\Lab3SPP.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyBrowserLibrary", "AssemblyBrowserLibrary\AssemblyBrowserLibrary.csproj", "{B4FA6C01-6E23-45C6-B9B0-CD61A74797B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestsLab3", "UnitTestsLab3\UnitTestsLab3.csproj", "{C3B9316E-3221-4AF0-986E-78AD33BE1C2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryForTest", "LibraryForTest\LibraryForTest.csproj", "{97861161-B24C-4649-A163-2A7C229F6885}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{B4FA6C01-6E23-45C6-B9B0-CD61A74797B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4FA6C01-6E23-45C6-B9B0-CD61A74797B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4FA6C01-6E23-45C6-B9B0-CD61A74797B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3B9316E-3221-4AF0-986E-78AD33BE1C2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B9316E-3221-4AF0-986E-78AD33BE1C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3B9316E-3221-4AF0-986E-78AD33BE1C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B9316E-3221-4AF0-986E-78AD33BE1C2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97861161-B24C-4649-A163-2A7C229F6885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97861161-B24C-4649-A163-2A7C229F6885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97861161-B24C-4649-A163-2A7C229F6885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97861161-B24C-4649-A163-2A7C229F6885}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
