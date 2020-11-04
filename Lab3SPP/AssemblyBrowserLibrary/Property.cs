@@ -54,7 +54,9 @@ namespace AssemblyBrowserLibrary
                 }
             }
 
-            Signature = AccessModifier + " " + propertyInfo.PropertyType.Name + " " + propertyInfo.Name + "{" + getter + setter + "}";
+            string retType;
+            retType = Model.GetTypeName(propertyInfo.PropertyType);
+            Signature = AccessModifier + " " + retType + " " + propertyInfo.Name + "{" + getter + setter + "}";
         }
     }
 }

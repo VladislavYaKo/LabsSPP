@@ -78,7 +78,7 @@ namespace AssemblyBrowserLibrary
             List<Method> tmp = new List<Method>();
             foreach (MethodInfo methodInfo in methods)
             {
-                if (!methodInfo.IsSpecialName)
+                if (!methodInfo.IsSpecialName && methodInfo.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
                 {
                     Method method = new Method(methodInfo);
                     tmp.Add(method);
@@ -108,8 +108,11 @@ namespace AssemblyBrowserLibrary
             List<Property> tmp = new List<Property>();
             foreach (PropertyInfo propertyInfo in properties)
             {
-                Property property = new Property(propertyInfo);
-                tmp.Add(property);
+                if (propertyInfo.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+                {
+                    Property property = new Property(propertyInfo);
+                    tmp.Add(property);
+                }
             }
             return tmp;
         }

@@ -50,7 +50,9 @@ namespace AssemblyBrowserLibrary
                 Modifier = "static";
             }
 
-            Signature = String.Format("{0} {1} {2} {3} ({4})", AccessModifier, Modifier, methodinfo.ReturnType.Name, methodinfo.Name, String.Join(",", methodParams));
+            string retType;
+            retType = Model.GetTypeName(methodinfo.ReturnType);
+            Signature = String.Format("{0} {1} {2} {3} ({4})", AccessModifier, Modifier, retType, methodinfo.Name, String.Join(",", methodParams));
         }
     }
 }

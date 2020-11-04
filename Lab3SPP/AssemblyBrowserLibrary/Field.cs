@@ -39,7 +39,9 @@ namespace AssemblyBrowserLibrary
                 Signature = Signature + "readonly ";
             }
 
-            Signature = Signature + fieldInfo.FieldType.Name + " " + fieldInfo.Name;
+            string retType;
+            retType = Model.GetTypeName(fieldInfo.FieldType);
+            Signature = Signature + retType + " " + fieldInfo.Name;
         }
     }
 }

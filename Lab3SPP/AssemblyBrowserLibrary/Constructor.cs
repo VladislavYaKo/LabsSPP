@@ -32,7 +32,7 @@ namespace AssemblyBrowserLibrary
                 AccessModifier = "internal";
             }
 
-            Signature = AccessModifier + " " + constructorInfo.Name + "(";
+            Signature = AccessModifier + " " + constructorInfo.DeclaringType.Name + "(";
 
             ParameterInfo[] parameterInfos = constructorInfo.GetParameters();
             for (int i = 0; i < parameterInfos.Length; i++)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,15 +31,40 @@ namespace AssemblyBrowserLibrary
                 Namespace existingNamespace = _namespaces.FirstOrDefault(namesp => namesp.Name == newNamespace.Name);
                 if (existingNamespace == default(Namespace))
                 {
-                    newNamespace.Classes.Add(new Class(type));
-                    _namespaces.Add(newNamespace);
+                    if (type.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+                    {
+                        newNamespace.Classes.Add(new Class(type));
+                        _namespaces.Add(newNamespace);
+                    }
                 }
                 else
                 {
-                    existingNamespace.Classes.Add(new Class(type));
+                    if (type.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+                        existingNamespace.Classes.Add(new Class(type));
                 }
             }
             return _namespaces;
+        }
+
+        public static string GetTypeName(Type type)
+        {
+            string retType;
+            if (type.IsGenericType)
+            {
+                retType = type.Name;
+                retType = retType.Remove(retType.IndexOf('`'));
+                retType += '<';
+                foreach (Type constructedType in type.GetGenericArguments())
+                {
+                    retType += GetTypeName(constructedType) + ',';
+                }
+                retType = retType.Remove(retType.Length - 1);
+                retType += '>';
+            }
+            else
+                retType = type.Name;
+
+            return retType;
         }
     }
 }
