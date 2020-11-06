@@ -26,21 +26,3 @@ namespace Lab3SPP
         }
     }
 }
-
-/*
-<HierarchicalDataTemplate DataType="{x:Type model:Class}" ItemsSource="{Binding Path=Collections}">
-                    <TextBlock Text="{Binding Name}"/>
-                </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type model:Method}">
-                    <TextBlock Text="{Binding Signature}"/>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type model:Field}">
-                    <TextBlock Text="{Binding Signature}"/>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type model:Property}">
-                    <TextBlock Text="{Binding Signature}"/>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type model:Constructor}">
-                    <TextBlock Text="{Binding Signature}"/>
-                </DataTemplate>
-*/
