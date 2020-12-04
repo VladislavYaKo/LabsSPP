@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using NUnitTestGenerator;
 
 namespace Lab4SPP
 {
@@ -43,8 +44,31 @@ namespace Lab4SPP
 
             var getTest = new TransformBlock<string, List<GeneratedTestsFile>>(text =>
             {
-                //TODO
-                return new List<GeneratedTestsFile>();
+                NUnitTestGenerator.NUnitTestGenerator nUnitTestGenerator = new NUnitTestGenerator.NUnitTestGenerator();
+                var generatedTests = nUnitTestGenerator.Generate(text);
+                List<GeneratedTestsFile> results = new List<GeneratedTestsFile>();
+                if (generatedTests == null)
+                {
+                    Console.WriteLine("Test methods cannot be generated.");
+                    return results;
+                }
+
+                foreach (var generatedTest in generatedTests)
+                {
+                    string generatedTestStr = generatedTest.ToString();
+                    string testName = "";
+                    string[] words = generatedTestStr.Split(' ');
+                    for (int i = 0; i < words.Length; i++)
+                    {
+                        if (words[i] == "class")
+                        {
+                            i++;
+                            testName = words[i].Trim(' ', '\r', '\n', '\t');
+                        }
+                    }
+                    results.Add(new GeneratedTestsFile(Path.GetFullPath(_testFolder) + "\\" + testName + "Test.cs", generatedTestStr));
+                }
+                return results;
             }, new ExecutionDataflowBlockOptions
             {
                 MaxDegreeOfParallelism = _maxThreads
